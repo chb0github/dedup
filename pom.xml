@@ -5,7 +5,7 @@
     <name>a file de-duplication tool</name>
     <groupId>org.bongiorno.tools</groupId>
     <artifactId>dedup</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.0.1</version>
     <description>a tool for deleting duplicate files in a series of directories</description>
 
     <!--http://datumedge.blogspot.com/2012/05/publishing-from-github-to-maven-central.html-->
