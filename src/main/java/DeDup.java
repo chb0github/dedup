@@ -26,13 +26,13 @@ import static org.bongiorno.misc.collections.ImprovedCollection.improve;
  */
 public class DeDup {
 
-    @Option(name = "--root", aliases = "-r", usage = "Where to search from")
+    @Option(name = "--root", aliases = "-r", usage = "Where to search from. Default is '.'")
     private ImprovedList<File> roots = ImprovedList.of(new File("."));
 
-    @Option(name = "--type", aliases = "-t", usage = "File type to include in the hash")
+    @Option(name = "--type", aliases = "-t", usage = "File type to include in the hash. Default is '.jpg' and '.gif'")
     private ImprovedList<String> fileTypes = ImprovedList.of(".jpg", ".gif");
 
-    @Option(name = "--algo", aliases = "-a", usage = "The algorithm to hash with")
+    @Option(name = "--algo", aliases = "-a", usage = "The algorithm to hash with. Default is MD5")
     private String hashAlgo = "MD5";
 
     private Map<String, ImprovedList<File>> hashes;
