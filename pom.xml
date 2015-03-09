@@ -134,6 +134,10 @@
                 <groupId>com.jolira</groupId>
                 <artifactId>onejar-maven-plugin</artifactId>
                 <version>1.4.4</version>
+                <configuration>
+                    <classifier>app</classifier>
+                    <attachToBuild>true</attachToBuild>
+                </configuration>
                 <executions>
                     <execution>
                         <goals>
