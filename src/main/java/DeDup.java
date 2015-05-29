@@ -26,10 +26,13 @@ import static org.bongiorno.misc.collections.ImprovedCollection.improve;
  */
 public class DeDup {
 
-    @Option(name = "--root", aliases = "-r", usage = "Where to search from. Default is '.'")
-    private ImprovedList<File> roots = ImprovedList.of(new File("."));
+    @Option(name = "--help", aliases = {"-?", "-h"}, help = true, usage = "Print this message")
+    private boolean help;
 
-    @Option(name = "--type", aliases = "-t", usage = "File type to include in the hash. Default is '.jpg' and '.gif'")
+    @Option(name = "--root", aliases = "-r", usage = "Where to search from. May supply multiples", required = true)
+    private ImprovedList<File> roots = new ImprovedList<>();
+
+    @Option(name = "--type", aliases = "-t", usage = "File type to include in the hash. Default is '.jpg' and '.gif'. May supply multiples")
     private ImprovedList<String> fileTypes = ImprovedList.of(".jpg", ".gif");
 
     @Option(name = "--algo", aliases = "-a", usage = "The algorithm to hash with. Default is MD5")
@@ -44,7 +47,10 @@ public class DeDup {
         DeDup app = new DeDup();
         CmdLineParser cmdLineParser = new CmdLineParser(app);
         cmdLineParser.parseArgument(args);
-//        System.out.println();
+        if(app.help){
+            cmdLineParser.printUsage(System.out);
+            System.exit(0);
+        }
         app.execute();
         System.out.println("Files found to process: " + app.hashes.values().parallelStream().mapToInt(List::size).sum());
         System.out.println("Files deleted: " + app.deleted.getOrDefault(Boolean.TRUE, new ImprovedList<>()).size());

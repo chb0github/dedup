@@ -136,6 +136,7 @@
                 <version>1.4.4</version>
                 <configuration>
                     <classifier>app</classifier>
+                    <filename>dedup</filename>
                     <attachToBuild>true</attachToBuild>
                 </configuration>
                 <executions>
