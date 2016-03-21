@@ -5,10 +5,11 @@
     <name>a file de-duplication tool</name>
     <groupId>org.bongiorno.tools</groupId>
     <artifactId>dedup</artifactId>
-    <version>1.0.4-SNAPSHOT</version>
+    <version>1.0.5-SNAPSHOT</version>
     <description>a tool for deleting duplicate files in a series of directories</description>
 
     <!--http://datumedge.blogspot.com/2012/05/publishing-from-github-to-maven-central.html-->
+    <!--http://central.sonatype.org/pages/working-with-pgp-signatures.html#generating-a-key-pair-->
     <!--https://oss.sonatype.org/#welcome-->
     <!-- staging repos - close - then release. Your libs are at the bottom-->
 
@@ -87,7 +88,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-release-plugin</artifactId>
-                <version>2.2.2</version>
+                <version>2.5.3</version>
                 <configuration>
                     <arguments>-Dgpg.passphrase=${gpg.passphrase}</arguments>
                 </configuration>
