@@ -8,15 +8,13 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.groupingBy;
 
 
 public class DeDup {
 
-    private Collection<File> roots = new LinkedList<>();
+    private Collection<File> roots = new HashSet<>();
 
     private Collection<String> fileTypes = new HashSet<>(Arrays.asList(".jpg", ".gif"));
 
