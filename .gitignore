@@ -10,7 +10,7 @@ buildNumber.properties
 .mvn/timing.properties
 ### Java template
 *.class
-
+*.DS_Store
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
@@ -70,3 +70,4 @@ crashlytics.properties
 crashlytics-build.properties
 
 # Created by .ignore support plugin (hsz.mobi)
+/target/
