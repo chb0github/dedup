@@ -49,15 +49,15 @@ public class DeDupTest {
         Class<? extends DeDupTest> aClass = this.getClass();
         Set<File> input = new HashSet<>();
 
-        String hDesert  = copy(aClass.getResourceAsStream("/original/Desert.jpg"), 3, "Desert", input);
-        String hJFish = copy(aClass.getResourceAsStream("/original/Jellyfish.jpg"), 5, "Jellyfish", input);
-        String hFlower = copy(aClass.getResourceAsStream("/original/Chrysanthemum.jpg"), 10, "Chrysanthemum", input);
+        String hDesert  = copy(aClass.getResourceAsStream("/src/test/resources/original/Desert.jpg"), 3, "Desert", input);
+        String hJFish = copy(aClass.getResourceAsStream("/src/test/resources/original/Jellyfish.jpg"), 5, "Jellyfish", input);
+        String hFlower = copy(aClass.getResourceAsStream("/src/test/resources/original/Chrysanthemum.jpg"), 10, "Chrysanthemum", input);
 
-        File koala = new File(aClass.getResource("/original/Koala.jpg").getFile());
+        File koala = new File(aClass.getResource("/src/test/resources/original/Koala.jpg").getFile());
 
         input.add(koala);
         // 19 total files
-        assertEquals(19, input.size());
+        Assert.assertEquals(19, input.size());
 
         long now = System.currentTimeMillis();
         DeDup dedup = new DeDup(input, "MD5", new HashSet<>(Arrays.asList(".gif", ".jpg")));
@@ -65,42 +65,42 @@ public class DeDupTest {
         System.out.println(System.currentTimeMillis() - now);
 
         List<File> errors = results.get(Boolean.FALSE);
-        assertNull(errors);
+        Assert.assertNull(errors);
 
         List<File> deleted = results.get(Boolean.TRUE);
         // 1 is spared in every duplicate set of files. 4 different files 19 -4
-        assertEquals(15, deleted.size());
+        Assert.assertEquals(15, deleted.size());
 
 
         Map<String, List<File>> hashes = dedup.getHashes();
 
         List<File> desert = hashes.get(hDesert);
-        assertEquals(3,desert.size());
-        assertFalse(deleted.containsAll(desert));
+        Assert.assertEquals(3,desert.size());
+        Assert.assertFalse(deleted.containsAll(desert));
 
         // assert list contains 2 deserts deleted
         desert = desert.subList(1,desert.size());
-        assertTrue(deleted.containsAll(desert));
+        Assert.assertTrue(deleted.containsAll(desert));
 
         List<File> jelly = hashes.get(hJFish);
-        assertEquals(5,jelly.size());
-        assertFalse(deleted.containsAll(jelly));
+        Assert.assertEquals(5,jelly.size());
+        Assert.assertFalse(deleted.containsAll(jelly));
 
         // assert list contains 4 fish deleted
         jelly = jelly.subList(1,jelly.size());
-        assertTrue(deleted.containsAll(jelly));
+        Assert.assertTrue(deleted.containsAll(jelly));
 
 
         List<File> flowers = hashes.get(hFlower);
-        assertEquals(10,flowers.size());
-        assertFalse(deleted.containsAll(flowers));
+        Assert.assertEquals(10,flowers.size());
+        Assert.assertFalse(deleted.containsAll(flowers));
 
         // assert list contains 9 flowers deleted
         flowers = flowers.subList(1,flowers.size());
-        assertTrue(deleted.containsAll(flowers));
+        Assert.assertTrue(deleted.containsAll(flowers));
 
         // assert no koalas
-        assertFalse(deleted.contains(koala));
+        Assert.assertFalse(deleted.contains(koala));
 
 
     }

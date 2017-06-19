@@ -78,6 +78,10 @@
 
     </dependencies>
 
+    <modules>
+        <module>dedup-java</module>
+        <module>dedup-kotlin</module>
+    </modules>
     <build>
         <plugins>
             <plugin>
