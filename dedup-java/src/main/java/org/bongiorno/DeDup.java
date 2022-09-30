@@ -70,6 +70,7 @@ public class DeDup {
         Map<Boolean, List<File>> rootsExist = roots.stream().collect(Collectors.partitioningBy(File::exists));
         rootsExist.getOrDefault(Boolean.FALSE, new LinkedList<>()).forEach(r -> System.out.printf("root '%s' does not exist. Ignoring%n",r));
         rootsExist.getOrDefault(Boolean.TRUE,new LinkedList<>()).forEach(f -> getFiles(f, filter, files));
+        // if the files aren't the same size, they can't possibly be the same hash
         Set<File> possibleDups = files.stream().filter(File::isFile).collect(
                 collectingAndThen(
                         groupingBy(File::length),
