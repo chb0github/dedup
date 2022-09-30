@@ -8,8 +8,9 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
-import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.*;
 
 
 public class DeDup {
@@ -45,9 +46,9 @@ public class DeDup {
             CMDS.computeIfAbsent(args[i++], s -> d -> string -> {}).apply(app).accept(args[i]);
         }
 
-        app.execute();
+        Map<Boolean, List<File>> results = app.execute();
         System.out.println("Files found to process: " + app.hashes.values().parallelStream().mapToInt(List::size).sum());
-        System.out.println("Files deleted: " + app.deleted.getOrDefault(Boolean.TRUE, new LinkedList<>()).size());
+        System.out.println("Files deleted: " + results.getOrDefault(Boolean.TRUE, new LinkedList<>()).size());
 
     }
 
@@ -63,21 +64,25 @@ public class DeDup {
 
     public Map<Boolean, List<File>> execute() throws Exception {
 
-
         FileFilter filter = (file) -> file.isDirectory() || fileTypes.stream().anyMatch(t -> file.getName().endsWith(t));
 
         List<File> files = new LinkedList<>();
-        roots.forEach(f -> getFiles(f, filter, files));
-        sizes = files.stream().filter(File::isFile).collect(groupingBy(File::length));
+        Map<Boolean, List<File>> rootsExist = roots.stream().collect(Collectors.partitioningBy(File::exists));
+        rootsExist.getOrDefault(Boolean.FALSE, new LinkedList<>()).forEach(r -> System.out.printf("root '%s' does not exist. Ignoring%n",r));
+        rootsExist.getOrDefault(Boolean.TRUE,new LinkedList<>()).forEach(f -> getFiles(f, filter, files));
+        Set<File> possibleDups = files.stream().filter(File::isFile).collect(
+                collectingAndThen(
+                        groupingBy(File::length),
+                        m -> m.values().stream().filter(fileList -> fileList.size() > 1).flatMap(Collection::stream).collect(toSet())
+                ));
+
+        System.out.printf("Possible duplicate count %d%n",possibleDups.size());
         // we could say don't hash if there is only 1 file, but that would make debugging harder as it wouldn't show up here
-        hashes = sizes.values().stream().flatMap(Collection::parallelStream).collect(groupingBy(this::hash));
+        hashes = possibleDups.parallelStream().collect(groupingBy(this::hash));
 
-
-        this.deleted = hashes.values().stream().map(l -> l.subList(1, l.size()))
-                .flatMap(Collection::parallelStream).collect(groupingBy(this::delete));
-
-
-        return this.deleted;
+        return hashes.values().stream() // if these are 2 files with the same hash, skip the first,
+                .filter(l -> l.size() > 1).map(l -> l.subList(1,l.size())).flatMap(Collection::parallelStream)
+                .collect(groupingBy(this::delete)); // delete the rest
     }
 
     private void exitHelp(String ignored) {
